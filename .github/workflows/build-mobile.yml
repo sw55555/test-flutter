@@ -83,10 +83,10 @@ jobs:
                   bundler-cache: true
                   working-directory: ./ios
 
-            - name: Install CocoaPods dependencies
-              working-directory: ./ios
-              run: |
-                  pod install
+            # - name: Install CocoaPods dependencies
+            #   working-directory: ./ios
+            #   run: |
+            #       pod install
 
             - name: Import Certificate and Provisioning Profiles
               env:
