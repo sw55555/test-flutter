@@ -1,0 +1,65 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  TEAM_ID = "2F67MQ8R79"
+  BASE_BUNDLE_ID = "app.snows55555.test_flutter"
+  CODE_SIGN_IDENTITY = "Apple Distribution: snows55555"
+
+  # Helper method to configure code signing for all targets
+  def configure_code_signing(bundle_id_suffix: "")
+    bundle_suffix = bundle_id_suffix.empty? ? "" : ".#{bundle_id_suffix}"
+
+    # Runner (main app)
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "./Runner.xcodeproj",
+      team_id: ENV["FASTLANE_TEAM_ID"] || TEAM_ID,
+      code_sign_identity: CODE_SIGN_IDENTITY,
+      bundle_identifier: "#{BASE_BUNDLE_ID}#{bundle_suffix}",
+      profile_name: "#{BASE_BUNDLE_ID}#{bundle_suffix} AppStore",
+      targets: ["Runner"]
+    )
+  end
+
+  desc "Description of what the lane does"
+  lane :gha_build_only do
+    # add actions here: https://docs.fastlane.tools/actions
+
+    # Install provisioning profiles (use development profiles for PR builds)
+    install_provisioning_profile(path: "profile_dev.mobileprovision")
+
+    # Configure code signing for dev bundle IDs
+    configure_code_signing(bundle_id_suffix: "development")
+
+    # Build the app
+    build_app(
+      scheme: "Runner",
+      workspace: "Runner.xcworkspace",
+      configuration: "Release",
+      export_method: "app-store",
+      xcargs: "-skipMacroValidation CODE_SIGN_IDENTITY='#{CODE_SIGN_IDENTITY}' CODE_SIGN_STYLE=Manual",
+      export_options: {
+        provisioningProfiles: {
+           "#{BASE_BUNDLE_ID}.development" => "#{BASE_BUNDLE_ID}.development AppStore",
+        },
+        signingStyle: "manual",
+        signingCertificate: CODE_SIGN_IDENTITY
+      }
+    )
+  end
+end
