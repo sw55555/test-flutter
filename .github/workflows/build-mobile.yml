@@ -9,7 +9,7 @@ on:
             environment:
                 description: 'Target environment'
                 required: true
-                default: 'production'
+                default: 'development'
                 type: string
         secrets:
             # KEY_JKS:
@@ -52,13 +52,13 @@ jobs:
 
         steps:
             - name: Checkout code
-              uses: actions/checkout@v6.0.1 # v6
+              uses: actions/checkout@v6 # v6
               with:
                   ref: ${{ inputs.ref || github.sha }}
                   persist-credentials: false
 
             - name: Setup Flutter SDK
-              uses: subosito/flutter-action@v2.21.0 # v2
+              uses: subosito/flutter-action@v2 # v2
               with:
                   channel: stable
                   flutter-version-file: pubspec.yaml
