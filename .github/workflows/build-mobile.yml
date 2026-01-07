@@ -99,19 +99,10 @@ jobs:
               run: |
                   # Decode certificate
                   echo "$IOS_CERTIFICATE_P12" | base64 --decode > certificate.p12
-                  echo "Decoded iOS certificate:"
-                  cat certificate.p12
 
-                  # Decode provisioning profiles based on environment
-                  if [[ "$ENVIRONMENT" == "development" ]]; then
-                    echo "$IOS_DEVELOPMENT_PROVISIONING_PROFILE" | base64 --decode > profile_dev.mobileprovision
-                    ls -lh profile_dev*.mobileprovision
-                  else
-                    echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > profile.mobileprovision
-                    ls -lh profile*.mobileprovision
-                    echo "Decoded iOS provisioning profile:"
-                    cat profile.mobileprovision
-                  fi
+                  echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > profile.mobileprovision
+                  ls -lh profile*.mobileprovision
+                  cat profile.mobileprovision
                   ls -lh .
 
             - name: Create keychain and import certificate
