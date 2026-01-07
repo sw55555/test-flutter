@@ -31,7 +31,7 @@ platform :ios do
       team_id: ENV["FASTLANE_TEAM_ID"] || TEAM_ID,
       code_sign_identity: CODE_SIGN_IDENTITY,
       bundle_identifier: "#{BASE_BUNDLE_ID}#{bundle_suffix}",
-      profile_name: "#{BASE_BUNDLE_ID}#{bundle_suffix}",
+      profile_name: "profile",
       targets: ["Runner"]
     )
   end
