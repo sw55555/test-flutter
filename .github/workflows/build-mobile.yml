@@ -101,8 +101,6 @@ jobs:
                   echo "$IOS_CERTIFICATE_P12" | base64 --decode > certificate.p12
 
                   echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > profile.mobileprovision
-                  ls -lh profile*.mobileprovision
-                  cat profile.mobileprovision
                   ls -lh .
 
             - name: Create keychain and import certificate
