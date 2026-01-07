@@ -93,9 +93,9 @@ platform :ios do
       export_method: "app-store",
       xcargs: "-skipMacroValidation CODE_SIGN_IDENTITY='#{CODE_SIGN_IDENTITY}' CODE_SIGN_STYLE=Manual",
       export_options: {
-        provisioningProfiles: {
-          "#{PROFILE_NAME}" => "#{PROFILE_NAME} AppStore",
-        },
+        # provisioningProfiles: {
+        #   "#{PROFILE_NAME}" => "#{PROFILE_NAME} AppStore",
+        # },
         signingStyle: "manual",
         signingCertificate: CODE_SIGN_IDENTITY
       }
@@ -202,9 +202,9 @@ platform :ios do
       skip_package_ipa: true,
       xcargs: "-skipMacroValidation CODE_SIGN_IDENTITY='#{CODE_SIGN_IDENTITY}' CODE_SIGN_STYLE=Manual",
       export_options: {
-        provisioningProfiles: {
-          "#{PROFILE_NAME}" => "#{PROFILE_NAME} AppStore",
-        },
+        # provisioningProfiles: {
+        #   "#{PROFILE_NAME}" => "#{PROFILE_NAME} AppStore",
+        # },
         signingStyle: "manual",
         signingCertificate: CODE_SIGN_IDENTITY
       }
