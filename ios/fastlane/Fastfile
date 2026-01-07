@@ -55,7 +55,7 @@ platform :ios do
       team_id: ENV["FASTLANE_TEAM_ID"] || TEAM_ID,
       code_sign_identity: CODE_SIGN_IDENTITY,
       bundle_identifier: "#{BASE_BUNDLE_ID}#{bundle_suffix}",
-      profile_name: "#{PROFILE_NAME}#{bundle_suffix} AppStore",
+      profile_name: "#{PROFILE_NAME}#{bundle_suffix}",
       targets: ["Runner"]
     )
   end
@@ -93,9 +93,6 @@ platform :ios do
       export_method: "app-store",
       xcargs: "-skipMacroValidation CODE_SIGN_IDENTITY='#{CODE_SIGN_IDENTITY}' CODE_SIGN_STYLE=Manual",
       export_options: {
-        # provisioningProfiles: {
-        #   "#{PROFILE_NAME}" => "#{PROFILE_NAME} AppStore",
-        # },
         signingStyle: "manual",
         signingCertificate: CODE_SIGN_IDENTITY
       }
@@ -202,9 +199,6 @@ platform :ios do
       skip_package_ipa: true,
       xcargs: "-skipMacroValidation CODE_SIGN_IDENTITY='#{CODE_SIGN_IDENTITY}' CODE_SIGN_STYLE=Manual",
       export_options: {
-        # provisioningProfiles: {
-        #   "#{PROFILE_NAME}" => "#{PROFILE_NAME} AppStore",
-        # },
         signingStyle: "manual",
         signingCertificate: CODE_SIGN_IDENTITY
       }
