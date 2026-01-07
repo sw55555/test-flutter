@@ -16,9 +16,9 @@
 default_platform(:ios)
 
 platform :ios do
-  TEAM_ID = "2F67MQ8R79"
-  BASE_BUNDLE_ID = "app.snows55555.test_flutter"
-  CODE_SIGN_IDENTITY = "Apple Distribution: snows55555"
+  TEAM_ID = "654QT4CCR2"
+  BASE_BUNDLE_ID = "com.anna.mr"
+  CODE_SIGN_IDENTITY = "Apple Distribution: xing chen (#{TEAM_ID})"
 
   # Helper method to configure code signing for all targets
   def configure_code_signing(bundle_id_suffix: "")
