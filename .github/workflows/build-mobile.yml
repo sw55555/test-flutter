@@ -132,6 +132,7 @@ jobs:
                   GITHUB_REF: ${{ github.ref }}
               working-directory: ./ios
               run: |
+                  ls -lh .
                   # Build only, no TestFlight upload for non-main branches
                   bundle exec fastlane gha_build_only
 
