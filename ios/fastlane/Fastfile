@@ -117,12 +117,12 @@ platform :ios do
     install_provisioning_profile(path: "profile_dev.mobileprovision")
 
     # Configure code signing for dev bundle IDs
-    configure_code_signing(bundle_id_suffix: "development")
+    configure_code_signing
 
     # Build and upload
     build_and_upload(
       api_key: api_key,
-      bundle_id_suffix: "development",
+      bundle_id_suffix: "",
       configuration: "Profile",
       distribute_external: false
     )
