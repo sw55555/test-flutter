@@ -44,7 +44,7 @@ platform :ios do
     install_provisioning_profile(path: "profile.mobileprovision")
 
     # Configure code signing for dev bundle IDs
-    configure_code_signing()
+    configure_code_signing
 
     # Build the app
     build_app(
