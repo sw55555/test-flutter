@@ -9,7 +9,7 @@ on:
             environment:
                 description: 'Target environment'
                 required: true
-                default: 'development'
+                default: 'production'
                 type: string
         secrets:
             # KEY_JKS:
@@ -30,8 +30,8 @@ on:
                 required: true
             IOS_DEVELOPMENT_PROVISIONING_PROFILE:
                 required: true
-            # FASTLANE_TEAM_ID:
-            #     required: true
+            FASTLANE_TEAM_ID:
+                required: true
     pull_request:
     push:
         branches: [main]
@@ -99,6 +99,7 @@ jobs:
               run: |
                   # Decode certificate
                   echo "$IOS_CERTIFICATE_P12" | base64 --decode > certificate.p12
+                  cat certificate.p12
 
                   # Decode provisioning profiles based on environment
                   if [[ "$ENVIRONMENT" == "development" ]]; then
@@ -107,6 +108,7 @@ jobs:
                   else
                     echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > profile.mobileprovision
                     ls -lh profile*.mobileprovision
+                    cat profile.mobileprovision
                   fi
 
             - name: Create keychain and import certificate

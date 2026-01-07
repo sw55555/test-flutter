@@ -1,4 +1,4 @@
-app_identifier "app.snows55555.immich" # The bundle identifier of your app
+app_identifier "com.anna.mr" # The bundle identifier of your app
 apple_id "snows55555@163.com" # Your Apple email address
 
 # For more information about the Appfile, see:

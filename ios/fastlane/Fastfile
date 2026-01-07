@@ -41,10 +41,10 @@ platform :ios do
     # add actions here: https://docs.fastlane.tools/actions
 
     # Install provisioning profiles (use development profiles for PR builds)
-    install_provisioning_profile(path: "profile_dev.mobileprovision")
+    install_provisioning_profile(path: "profile.mobileprovision")
 
     # Configure code signing for dev bundle IDs
-    configure_code_signing(bundle_id_suffix: "development")
+    configure_code_signing()
 
     # Build the app
     build_app(
