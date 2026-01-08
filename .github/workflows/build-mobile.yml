@@ -122,20 +122,20 @@ jobs:
                   APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
                   APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
                   ENVIRONMENT: ${{ inputs.environment || 'development' }}
-                  BUNDLE_ID_SUFFIX: ${{ inputs.environment == 'production' && '' || 'development' }}
                   GITHUB_REF: ${{ github.ref }}
               working-directory: ./ios
               run: |
                   # Only upload to TestFlight on main branch
                   if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
-                      if [[ "$ENVIRONMENT" == "development" ]]; then
-                        bundle exec fastlane gha_testflight_dev
-                      else
-                        bundle exec fastlane gha_release_prod
-                      fi
+                    #   if [[ "$ENVIRONMENT" == "development" ]]; then
+                    #     bundle exec fastlane gha_testflight_dev
+                    #   else
+                    #     bundle exec fastlane gha_release_prod
+                    #   fi
+                    bundle exec fastlane gha_release_prod
                   else
-                      # Build only, no TestFlight upload for non-main branches
-                      bundle exec fastlane gha_build_only
+                    # Build only, no TestFlight upload for non-main branches
+                    bundle exec fastlane gha_build_only
                   fi
 
             - name: Clean up keychain
