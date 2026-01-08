@@ -9,13 +9,9 @@ on:
             environment:
                 description: 'Target environment'
                 required: true
-                default: 'development'
+                default: 'production'
                 type: string
         secrets:
-            # KEY_JKS:
-            #     required: true
-            # ALIAS:
-            #     required: true
             APP_STORE_CONNECT_API_KEY_ID:
                 required: true
             APP_STORE_CONNECT_API_KEY_ISSUER_ID:
@@ -27,8 +23,6 @@ on:
             IOS_CERTIFICATE_PASSWORD:
                 required: true
             IOS_PROVISIONING_PROFILE:
-                required: true
-            IOS_DEVELOPMENT_PROVISIONING_PROFILE:
                 required: true
             FASTLANE_TEAM_ID:
                 required: true
@@ -52,13 +46,13 @@ jobs:
 
         steps:
             - name: Checkout code
-              uses: actions/checkout@v6 # v6
+              uses: actions/checkout@v6
               with:
                   ref: ${{ inputs.ref || github.sha }}
                   persist-credentials: false
 
             - name: Setup Flutter SDK
-              uses: subosito/flutter-action@v2 # v2
+              uses: subosito/flutter-action@v2
               with:
                   channel: stable
                   flutter-version-file: pubspec.yaml
@@ -68,26 +62,12 @@ jobs:
               working-directory: .
               run: flutter pub get
 
-            # - name: Generate translation files
-            #   run: dart run easy_localization:generate -S ../i18n && dart run bin/generate_keys.dart
-            #   working-directory: .
-
-            # - name: Generate platform APIs
-            #   run: make pigeon
-            #   working-directory: .
-
             - name: Setup Ruby
               uses: ruby/setup-ruby@v1
               with:
                   ruby-version: '3.3'
                   bundler-cache: true
                   working-directory: ./ios
-
-            # - name: Install CocoaPods dependencies
-            #   working-directory: ./ios
-            #   run: |
-            #       pod install
-
             - name: Create API Key
               env:
                   API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
@@ -103,7 +83,6 @@ jobs:
                   IOS_CERTIFICATE_P12: ${{ secrets.IOS_CERTIFICATE_P12 }}
                   IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
                   IOS_PROVISIONING_PROFILE: ${{ secrets.IOS_PROVISIONING_PROFILE }}
-                  IOS_DEVELOPMENT_PROVISIONING_PROFILE: ${{ secrets.IOS_DEVELOPMENT_PROVISIONING_PROFILE }}
                   ENVIRONMENT: ${{ inputs.environment || 'development' }}
               working-directory: ./ios
               run: |
@@ -111,11 +90,7 @@ jobs:
                   echo "$IOS_CERTIFICATE_P12" | base64 --decode > certificate.p12
 
                   # Decode provisioning profiles based on environment
-                  if [[ "$ENVIRONMENT" == "development" ]]; then
-                      echo "$IOS_DEVELOPMENT_PROVISIONING_PROFILE" | base64 --decode > profile_dev.mobileprovision
-                  else
-                      echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > profile.mobileprovision
-                  fi
+                  echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > profile.mobileprovision
 
                   ls -lh .
 
@@ -169,7 +144,7 @@ jobs:
                   security delete-keychain build.keychain || true
 
             - name: Upload IPA artifact
-              uses: actions/upload-artifact@v5 # v5.0.0
+              uses: actions/upload-artifact@v5
               with:
                   name: ios-release-ipa
                   path: ./ios/Runner.ipa

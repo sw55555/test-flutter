@@ -1,0 +1,4 @@
+TEAM_ID: "654QT4CCR2"
+BUNDLE_ID: "com.anna.mr"
+PROVISIONING_PROFILE_NAME: "anna-test"
+CODE_SIGN_IDENTITY: "Apple Distribution: xing chen (654QT4CCR2)"

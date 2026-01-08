@@ -16,18 +16,23 @@
 default_platform(:ios)
 
 platform :ios do
+  require 'yaml'
+  configure = YAML.load_file(File.join(Dir.pwd, "..", "configure.yaml"))
+
   # Constants
-  TEAM_ID = "654QT4CCR2"
-  PROFILE_NAME = "anna-test"
-  BASE_BUNDLE_ID = "com.anna.mr"
-  CODE_SIGN_IDENTITY = "Apple Distribution: xing chen (#{TEAM_ID})"
+  TEAM_ID = configure['TEAM_ID']
+  BUNDLE_ID = configure['BUNDLE_ID']
+  PROJECT_FILE = "./Runner.xcodeproj"
+  CODE_SIGN_IDENTITY = configure['CODE_SIGN_IDENTITY']
+  PROVISIONING_PROFILE_NAME = configure['PROVISIONING_PROFILE_NAME']
 
   # Helper method to get App Store Connect API key
   def get_api_key
+    key_id = ENV["APP_STORE_CONNECT_API_KEY_ID"]
     app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      key_id: key_id,
       issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
-      key_filepath: "#{Dir.home}/.appstoreconnect/private_keys/AuthKey_#{ENV['APP_STORE_CONNECT_API_KEY_ID']}.p8",
+      key_filepath: "#{Dir.home}/.appstoreconnect/private_keys/AuthKey_#{key_id}.p8",
       duration: 1200,
       in_house: false
     )
@@ -37,25 +42,21 @@ platform :ios do
   def get_version_from_pubspec
     require 'yaml'
 
-    pubspec_path = File.join(Dir.pwd, "../..", "pubspec.yaml")
-    pubspec = YAML.load_file(pubspec_path)
+    pubspec = YAML.load_file(File.join(Dir.pwd, "../..", "pubspec.yaml"))
 
     version_string = pubspec['version']
     version_string ? version_string.split('+').first : nil
   end
 
   # Helper method to configure code signing for all targets
-  def configure_code_signing(bundle_id_suffix: "")
-    bundle_suffix = bundle_id_suffix.empty? ? "" : ".#{bundle_id_suffix}"
-
-    # Runner (main app)
+  def configure_code_signing()
     update_code_signing_settings(
       use_automatic_signing: false,
-      path: "./Runner.xcodeproj",
+      path: PROJECT_FILE,
       team_id: ENV["FASTLANE_TEAM_ID"] || TEAM_ID,
       code_sign_identity: CODE_SIGN_IDENTITY,
-      bundle_identifier: "#{BASE_BUNDLE_ID}#{bundle_suffix}",
-      profile_name: "#{PROFILE_NAME}#{bundle_suffix}",
+      bundle_identifier: BUNDLE_ID,
+      profile_name: PROVISIONING_PROFILE_NAME,
       targets: ["Runner"]
     )
   end
@@ -63,14 +64,10 @@ platform :ios do
   # Helper method to build and upload to TestFlight
   def build_and_upload(
     api_key:,
-    bundle_id_suffix: "",
     configuration: "Release",
     distribute_external: true,
     version_number: nil
   )
-    bundle_suffix = bundle_id_suffix.empty? ? "" : ".#{bundle_id_suffix}"
-    app_identifier = "#{BASE_BUNDLE_ID}#{bundle_suffix}"
-
     # Set version number if provided
     if version_number
       increment_version_number(version_number: version_number)
@@ -80,9 +77,9 @@ platform :ios do
     increment_build_number(
       build_number: latest_testflight_build_number(
         api_key: api_key,
-        app_identifier: app_identifier
+        app_identifier: BUNDLE_ID
       ) + 1,
-      xcodeproj: "./Runner.xcodeproj"
+      xcodeproj: PROJECT_FILE
     )
 
     # Build the app
@@ -119,7 +116,6 @@ platform :ios do
     # Build and upload
     build_and_upload(
       api_key: api_key,
-      bundle_id_suffix: "",
       configuration: "Profile",
       distribute_external: false
     )
@@ -146,7 +142,7 @@ platform :ios do
   desc "iOS Manual Release"
   lane :release_manual do
     enable_automatic_code_signing(
-      path: "./Runner.xcodeproj",
+      path: PROJECT_FILE,
       targets: ["Runner"]
     )
 
